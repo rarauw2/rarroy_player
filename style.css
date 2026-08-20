@@ -1,244 +1,350 @@
 :root {
-  --bg-color: #f1f5f9;
-  --panel-bg: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --accent: #0f172a;
-  --accent-hover: #334155;
-  --border: #e2e8f0;
-  --tree-hover: #f8fafc;
-  --active-track: #f1f5f9;
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0f172a;
+    --accent-hover: #334155;
+    --border: #e2e8f0;
+    --tree-hover: #f8fafc;
+    --active-track: #f1f5f9;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
 }
 
 /* Layout principal */
 .app-layout {
-  display: grid;
-  grid-template-columns: 320px 380px;
-  background: var(--panel-bg);
-  border-radius: 1.25rem;
-  border: 1px solid var(--border);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-  height: 600px;
-  max-height: 90vh;
-  width: 100%;
-  max-width: 740px;
-  overflow: hidden;
+    display: grid;
+    grid-template-columns: 320px 380px;
+    background: var(--panel-bg);
+    border-radius: 1.25rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    height: 600px;
+    max-height: 90vh;
+    width: 100%;
+    max-width: 740px;
+    overflow: hidden;
 }
 
 /* Panel Izquierdo: Sidebar */
 .sidebar {
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  background-color: #fafbfc;
-  height: 100%;
-  min-height: 0; /* Clave para habilitar el scroll en Grid */
-  overflow: hidden;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background-color: #fafbfc;
+    height: 100%;
+    min-height: 0;
+    /* Clave para habilitar el scroll en Grid */
+    overflow: hidden;
 }
 
 .sidebar-header {
-  padding: 1.25rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .sidebar-header h3 {
-  font-size: 1rem;
-  font-weight: 600;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .folder-btn {
-  font-size: 0.75rem;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  padding: 0.35rem 0.65rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.15s;
+    font-size: 0.75rem;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
 }
 
 .folder-btn:hover {
-  background: #f1f5f9;
+    background: #f1f5f9;
 }
 
 /* Scroll garantizado en la lista */
 .tree-container {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  padding: 0.75rem;
-  min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 0.75rem;
+    min-height: 0;
 }
 
 .empty-msg {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-align: center;
-  margin-top: 2rem;
-  line-height: 1.4;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 2rem;
+    line-height: 1.4;
 }
 
 .album-group {
-  margin-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .album-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding: 0.4rem 0.5rem;
-  letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.4rem 0.5rem;
+    letter-spacing: 0.5px;
 }
 
 .track-item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0.6rem;
-  border-radius: 0.375rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.15s;
 }
 
 .track-item:hover {
-  background-color: var(--tree-hover);
+    background-color: var(--tree-hover);
 }
 
 .track-item.active {
-  background-color: var(--active-track);
-  font-weight: 600;
-  color: var(--text-main);
+    background-color: var(--active-track);
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 /* Panel Derecho: Reproductor */
 .player-container {
-  padding: 1.5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  overflow: hidden;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    overflow: hidden;
 }
 
 .cover-wrapper {
-  width: 170px;
-  height: 170px;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--border);
-  flex-shrink: 0;
+    width: 170px;
+    height: 170px;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 #track-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .track-info {
-  text-align: center;
-  width: 100%;
+    text-align: center;
+    width: 100%;
 }
 
 .track-info h2 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 1.05rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .track-info p {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .progress-section {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
 }
 
 input[type="range"] {
-  flex: 1;
-  accent-color: var(--accent);
-  cursor: pointer;
+    flex: 1;
+    accent-color: var(--accent);
+    cursor: pointer;
 }
 
 .controls {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
 .controls button {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  width: 2.75rem;
-  height: 2.75rem;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  font-size: 1rem;
-  color: var(--text-main);
-  transition: all 0.15s;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    color: var(--text-main);
+    transition: all 0.15s;
 }
 
 .controls button:hover {
-  background: var(--bg-color);
+    background: var(--bg-color);
 }
 
 .controls .primary-btn {
-  background: var(--accent);
-  color: #ffffff;
-  border: none;
-  width: 3.2rem;
-  height: 3.2rem;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    width: 3.2rem;
+    height: 3.2rem;
 }
 
 .controls .primary-btn:hover {
-  background: var(--accent-hover);
+    background: var(--accent-hover);
 }
 
 .volume-section {
-  width: 85%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
+    width: 85%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Variables en modo oscuro */
+body.dark-mode {
+    --bg-color: #0b0f17;
+    --panel-bg: #151d2a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #f8fafc;
+    --accent-hover: #cbd5e1;
+    --border: #233044;
+    --tree-hover: #1c2638;
+    --active-track: #1e293b;
+}
+
+body.dark-mode .sidebar {
+    background-color: #111824;
+}
+
+body.dark-mode .folder-btn {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+body.dark-mode .folder-btn:hover {
+    background-color: #27354a;
+}
+
+body.dark-mode .controls .primary-btn {
+    color: #0b0f17;
+}
+
+/* Transición suave al cambiar de tema */
+body,
+.app-layout,
+.sidebar,
+.track-item,
+button {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Posicionamiento del botón en la esquina superior derecha con escala compacta */
+.theme-toggle {
+  position: absolute !important;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 999;
+  transform: scale(0.6);
+  transform-origin: top right;
+}
+
+/* Estilos de Uiverse.io adaptados */
+.toggle-switch {
+    position: relative;
+    width: 100px;
+    height: 50px;
+    --light: #d8dbe0;
+    --dark: #1e293b;
+}
+
+.switch-label {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background-color: var(--dark);
+    border-radius: 25px;
+    cursor: pointer;
+    border: 3px solid var(--dark);
+}
+
+.checkbox {
+    position: absolute;
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+.checkbox:checked~.slider {
+    background-color: var(--light);
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    box-shadow: inset 12px -4px 0px 0px var(--light);
+    background-color: var(--dark);
+    transition: 0.3s;
+}
+
+.checkbox:checked~.slider::before {
+    transform: translateX(50px);
+    background-color: var(--dark);
+    box-shadow: none;
 }

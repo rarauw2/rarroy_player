@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>rarroy player</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rarroy player</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 </head>
+
 <body>
-  <div class="app-layout">
-    <!-- PANEL IZQUIERDO: BIBLIOTECA / ÁLBUMES -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h3>Tu Biblioteca</h3>
-        <!-- Permite cargar una carpeta entera manteniendo la jerarquía -->
-        <label for="folder-input" class="folder-btn">📁 Cargar carpeta</label>
-        <input type="file" id="folder-input" webkitdirectory directory multiple hidden>
-      </div>
-      <div id="tree-container" class="tree-container">
-        <p class="empty-msg">Selecciona una carpeta o coloca tus pistas en <code>songs/</code></p>
-      </div>
-    </aside>
+    <div class="toggle-switch theme-toggle">
+        <label class="switch-label">
+            <input type="checkbox" class="checkbox" id="theme-checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
 
-    <!-- PANEL DERECHO: REPRODUCTOR -->
-    <main class="player-container">
-      <div class="cover-wrapper">
-        <img id="track-cover" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23e2e8f0'><rect width='100' height='100'/></svg>" alt="Cover">
-      </div>
+    <div class="app-layout">
+        <!-- PANEL IZQUIERDO: BIBLIOTECA / ÁLBUMES -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Tu Biblioteca</h3>
+                <!-- Permite cargar una carpeta entera manteniendo la jerarquía -->
+                <label for="folder-input" class="folder-btn">📁 Cargar carpeta</label>
+                <input type="file" id="folder-input" webkitdirectory directory multiple hidden>
+            </div>
+            <div id="tree-container" class="tree-container">
+                <p class="empty-msg">Selecciona una carpeta o coloca tus pistas en <code>songs/</code></p>
+            </div>
+        </aside>
 
-      <div class="track-info">
-        <h2 id="track-title">Sin reproducción</h2>
-        <p id="track-artist">Selecciona un archivo</p>
-      </div>
+        <!-- PANEL DERECHO: REPRODUCTOR -->
+        <main class="player-container">
+            <div class="cover-wrapper">
+                <img id="track-cover"
+                    src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23e2e8f0'><rect width='100' height='100'/></svg>"
+                    alt="Cover">
+            </div>
 
-      <div class="progress-section">
-        <span id="current-time">0:00</span>
-        <input type="range" id="seek-bar" value="0" min="0" max="100" step="0.1">
-        <span id="duration">0:00</span>
-      </div>
+            <div class="track-info">
+                <h2 id="track-title">Sin reproducción</h2>
+                <p id="track-artist">Selecciona un archivo</p>
+            </div>
 
-      <div class="controls">
-        <button id="prev-btn" title="Anterior">⏮</button>
-        <button id="play-btn" class="primary-btn" title="Reproducir">▶</button>
-        <button id="next-btn" title="Siguiente">⏭</button>
-      </div>
+            <div class="progress-section">
+                <span id="current-time">0:00</span>
+                <input type="range" id="seek-bar" value="0" min="0" max="100" step="0.1">
+                <span id="duration">0:00</span>
+            </div>
 
-      <div class="volume-section">
-        <span>🔈</span>
-        <input type="range" id="volume-bar" value="1" min="0" max="1" step="0.05">
-        <span>🔊</span>
-      </div>
-    </main>
-  </div>
+            <div class="controls">
+                <button id="prev-btn" title="Anterior">⏮</button>
+                <button id="play-btn" class="primary-btn" title="Reproducir">▶</button>
+                <button id="next-btn" title="Siguiente">⏭</button>
+            </div>
 
-  <audio id="audio-engine"></audio>
-  <script src="app.js"></script>
+            <div class="volume-section">
+                <span>🔈</span>
+                <input type="range" id="volume-bar" value="1" min="0" max="1" step="0.05">
+                <span>🔊</span>
+            </div>
+        </main>
+    </div>
+
+    <audio id="audio-engine"></audio>
+    <script src="app.js"></script>
 </body>
+
 </html>

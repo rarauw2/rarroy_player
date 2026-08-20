@@ -263,4 +263,24 @@ volumeBar.addEventListener('input', (e) => {
   audio.volume = e.target.value;
 });
 
+// Gestión de Tema Claro / Oscuro con persistencia
+const themeCheckbox = document.getElementById('theme-checkbox');
+
+// Comprobar preferencia guardada previamente
+const savedTheme = localStorage.getItem('app-theme');
+if (savedTheme === 'dark') {
+  document.body.classList.add('dark-mode');
+  themeCheckbox.checked = true;
+}
+
+themeCheckbox.addEventListener('change', (e) => {
+  if (e.target.checked) {
+    document.body.classList.add('dark-mode');
+    localStorage.setItem('app-theme', 'dark');
+  } else {
+    document.body.classList.remove('dark-mode');
+    localStorage.setItem('app-theme', 'light');
+  }
+});
+
 document.addEventListener('DOMContentLoaded', loadFromGitHubAPI);
