@@ -15,15 +15,13 @@ const trackTitle = document.getElementById('track-title');
 const trackArtist = document.getElementById('track-artist');
 const trackCover = document.getElementById('track-cover');
 const treeContainer = document.getElementById('tree-container');
+const folderInput = document.getElementById('folder-input');
 
-// Imagen por defecto (Placeholder gris minimalista como el de tu imagen)
 const DEFAULT_COVER = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23e2e8f0'><rect width='100' height='100'/></svg>";
 
-// Variables de estado
-let flatPlaylist = []; // Lista plana para reproducción secuencial
+let flatPlaylist = [];
 let currentTrackIndex = 0;
 
-// Utilidad para formatear segundos a MM:SS
 function formatTime(seconds) {
   if (isNaN(seconds)) return '0:00';
   const min = Math.floor(seconds / 60);
@@ -31,17 +29,27 @@ function formatTime(seconds) {
   return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// SOLUCIÓN ARTISTA/CARÁTULA: Extrae metadatos ID3 usando jsmediatags
-// Esta función lee los metadatos REALES que están dentro del archivo MP3.
-function extractMetadata(fileUrl) {
-  return new Promise((resolve) => {
-    // Si no cargaste jsmediatags vía CDN en index.html, esto fallará
+// Extrae metadatos ID3 pasando un Blob descargado para evitar fallos de rango HTTP
+async function extractMetadata(source) {
+  return new Promise(async (resolve) => {
     if (!window.jsmediatags) {
-      console.warn("jsmediatags no está cargado");
       return resolve(null);
     }
 
-    window.jsmediatags.read(fileUrl, {
+    let targetFile = source;
+
+    // Si viene como URL string, lo convertimos a Blob
+    if (typeof source === 'string') {
+      try {
+        const res = await fetch(source);
+        if (!res.ok) throw new Error('Fetch falló');
+        targetFile = await res.blob();
+      } catch (err) {
+        return resolve(null);
+      }
+    }
+
+    window.jsmediatags.read(targetFile, {
       onSuccess: (tag) => {
         const { title, artist, picture } = tag.tags;
         let coverUrl = DEFAULT_COVER;
@@ -57,50 +65,45 @@ function extractMetadata(fileUrl) {
         }
 
         resolve({
-          title: title, // Título real ID3
-          artist: artist, // Artista real ID3
-          coverUrl: coverUrl // Carátula real ID3
+          title: title,
+          artist: artist,
+          coverUrl: coverUrl
         });
       },
-      onError: (error) => {
-        // Si no hay metadatos ID3, resolvemos con null para usar valores por defecto
-        resolve(null);
-      }
+      onError: () => resolve(null)
     });
   });
 }
 
-// Carga y reproduce una pista por su índice
+// Carga de pista
 async function loadTrack(index) {
   if (flatPlaylist.length === 0) return;
   currentTrackIndex = index;
   const track = flatPlaylist[index];
 
-  // Limpiar carátula y textos anteriores para evitar el "parpadeo" del anterior
-  trackCover.src = DEFAULT_COVER; 
-  trackTitle.textContent = track.fileName; // Usamos el nombre del archivo temporalmente
-  trackArtist.textContent = `Cargando artista... • ${track.albumFolderName}`;
+  // Limpiar carátula y poner nombre del archivo
+  trackCover.src = DEFAULT_COVER;
+  trackTitle.textContent = track.fileName;
+  trackArtist.textContent = track.albumFolderName;
 
-  // Cargar el audio
-  audio.src = track.url;
-  
-  // SOLUCIÓN: Extraer metadatos reales ID3
-  const meta = await extractMetadata(track.url);
-  
-  if (meta) {
-    trackTitle.textContent = meta.title || track.fileName;
-    // Si hay artista real en el ID3, lo usamos
-    trackArtist.textContent = `${meta.artist || 'Artista desconocido'} • ${track.albumFolderName}`;
-    trackCover.src = meta.coverUrl;
-  } else {
-    // Si falla, usamos el nombre del archivo como artista para no dejar el "Cargando..."
-    trackArtist.textContent = `${track.fileName} • ${track.albumFolderName}`;
+  if (audio.src && audio.src.startsWith('blob:')) {
+    URL.revokeObjectURL(audio.src);
   }
 
+  const source = track.file || track.url;
+  audio.src = track.file ? URL.createObjectURL(track.file) : track.url;
+
   updateSelectionUI();
+
+  // Extraer metadatos ID3 en segundo plano
+  const meta = await extractMetadata(source);
+  if (meta && currentTrackIndex === index) {
+    if (meta.title) trackTitle.textContent = meta.title;
+    if (meta.artist) trackArtist.textContent = `${meta.artist} • ${track.albumFolderName}`;
+    trackCover.src = meta.coverUrl;
+  }
 }
 
-// Resalta la canción actual en la biblioteca
 function updateSelectionUI() {
   document.querySelectorAll('.track-item').forEach((el) => {
     const idx = parseInt(el.getAttribute('data-index'), 10);
@@ -108,7 +111,6 @@ function updateSelectionUI() {
   });
 }
 
-// Reproducir/Pausar
 function togglePlay() {
   if (flatPlaylist.length === 0) return;
   if (audio.paused) {
@@ -120,10 +122,9 @@ function togglePlay() {
   }
 }
 
-// Renderiza el árbol de la biblioteca agrupado por carpetas (álbumes)
 function renderLibraryTree(groupedTracks) {
   treeContainer.innerHTML = '';
-  flatPlaylist = []; // Resetear la lista plana
+  flatPlaylist = [];
   let globalIndex = 0;
 
   for (const [albumName, tracks] of Object.entries(groupedTracks)) {
@@ -132,18 +133,17 @@ function renderLibraryTree(groupedTracks) {
 
     const header = document.createElement('div');
     header.className = 'album-title';
-    header.textContent = albumName; // Nombre de la carpeta como nombre de álbum
+    header.textContent = `📁 ${albumName}`;
     group.appendChild(header);
 
     tracks.forEach((track) => {
-      // Añadir a la lista plana para navegación sig/ant
       flatPlaylist.push(track);
       const currentIndex = globalIndex;
 
       const trackEl = document.createElement('div');
       trackEl.className = 'track-item';
       trackEl.setAttribute('data-index', currentIndex);
-      trackEl.textContent = track.fileName; // Usamos el nombre del archivo en la lista
+      trackEl.textContent = track.fileName;
 
       trackEl.addEventListener('click', () => {
         loadTrack(currentIndex);
@@ -159,32 +159,28 @@ function renderLibraryTree(groupedTracks) {
   }
 }
 
-// Carga automática desde la API de GitHub
+// Carga desde GitHub API
 async function loadFromGitHubAPI() {
-  treeContainer.innerHTML = '<p class="empty-msg">Sincronizando con GitHub...</p>';
+  treeContainer.innerHTML = '<p class="empty-msg">Sincronizando canciones...</p>';
 
   try {
-    // 1. Obtener carpetas dentro de /songs
     const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/songs?ref=${BRANCH}`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error('No se pudo acceder a la carpeta /songs');
+    if (!res.ok) throw new Error('Error al conectar con la API de GitHub');
     
     const contents = await res.json();
     const albumFolders = contents.filter(item => item.type === 'dir');
     const groupedTracks = {};
 
-    // 2. Recorrer cada carpeta de álbum
     for (const album of albumFolders) {
       const albumRes = await fetch(album.url);
       const albumContents = await albumRes.json();
       
-      // Filtrar archivos de audio
       const tracks = albumContents
-        .filter(f => f.type === 'file' && /\.(mp3|m4a|wav)$/i.test(f.name))
+        .filter(f => f.type === 'file' && /\.(mp3|m4a|wav|ogg|flac)$/i.test(f.name))
         .map(f => ({
-          fileName: f.name.replace(/\.[^/.]+$/, ''), // Nombre de archivo sin extensión
-          albumFolderName: album.name, // Nombre de la carpeta contenedora
-          // URL final servida por GitHub Pages
+          fileName: f.name.replace(/\.[^/.]+$/, ''),
+          albumFolderName: album.name,
           url: `songs/${encodeURIComponent(album.name)}/${encodeURIComponent(f.name)}`
         }));
 
@@ -195,17 +191,39 @@ async function loadFromGitHubAPI() {
 
     renderLibraryTree(groupedTracks);
     if (flatPlaylist.length > 0) {
-      loadTrack(0); // Carga la primera canción (sin reproducir)
+      loadTrack(0);
     } else {
-      treeContainer.innerHTML = '<p class="empty-msg">No se encontraron archivos de audio en /songs.</p>';
+      treeContainer.innerHTML = '<p class="empty-msg">No se encontraron audios en /songs.</p>';
     }
   } catch (error) {
     console.error(error);
-    treeContainer.innerHTML = '<p class="empty-msg">Error al sincronizar.<br>Verifica la config en app.js.</p>';
+    treeContainer.innerHTML = '<p class="empty-msg">Error de conexión con GitHub.<br>Usa el botón "Cargar carpeta".</p>';
   }
 }
 
-// Event Listeners para controles
+// Carga manual local alternativa
+folderInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files).filter(f => f.type.startsWith('audio/'));
+  if (files.length === 0) return;
+
+  const grouped = {};
+  files.forEach(file => {
+    const parts = file.webkitRelativePath.split('/');
+    const album = parts.length > 2 ? parts[parts.length - 2] : 'Canciones sueltas';
+
+    if (!grouped[album]) grouped[album] = [];
+    grouped[album].push({
+      fileName: file.name.replace(/\.[^/.]+$/, ''),
+      albumFolderName: album,
+      file: file
+    });
+  });
+
+  renderLibraryTree(grouped);
+  loadTrack(0);
+});
+
+// Controles y eventos
 playBtn.addEventListener('click', togglePlay);
 
 nextBtn.addEventListener('click', () => {
@@ -224,11 +242,9 @@ prevBtn.addEventListener('click', () => {
   playBtn.textContent = '⏸';
 });
 
-// Eventos de Audio (Tiempo y Progreso)
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
-  const progressPercent = (audio.currentTime / audio.duration) * 100;
-  seekBar.value = progressPercent;
+  seekBar.value = (audio.currentTime / audio.duration) * 100;
   currentTimeEl.textContent = formatTime(audio.currentTime);
 });
 
@@ -236,11 +252,8 @@ audio.addEventListener('loadedmetadata', () => {
   durationEl.textContent = formatTime(audio.duration);
 });
 
-audio.addEventListener('ended', () => {
-  nextBtn.click(); // Autoreproducción siguiente
-});
+audio.addEventListener('ended', () => nextBtn.click());
 
-// Interacciones con barras
 seekBar.addEventListener('input', () => {
   if (!audio.duration) return;
   audio.currentTime = (seekBar.value / 100) * audio.duration;
@@ -250,5 +263,4 @@ volumeBar.addEventListener('input', (e) => {
   audio.volume = e.target.value;
 });
 
-// Iniciar al cargar el DOM
 document.addEventListener('DOMContentLoaded', loadFromGitHubAPI);

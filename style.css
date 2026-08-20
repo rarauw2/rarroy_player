@@ -27,27 +27,30 @@ body {
   padding: 1.5rem;
 }
 
-/* Disposición en dos columnas */
+/* Layout principal */
 .app-layout {
   display: grid;
-  grid-template-columns: 320px 380px; /* Ancho fijo para las columnas */
+  grid-template-columns: 320px 380px;
   background: var(--panel-bg);
   border-radius: 1.25rem;
   border: 1px solid var(--border);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-  overflow: hidden; /* Importante para que el scroll interior funcione */
-  height: 560px; /* Altura fija total */
+  height: 600px;
+  max-height: 90vh;
   width: 100%;
-  max-width: 700px;
+  max-width: 740px;
+  overflow: hidden;
 }
 
-/* Panel Izquierdo: Sidebar (Biblioteca) */
+/* Panel Izquierdo: Sidebar */
 .sidebar {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   background-color: #fafbfc;
-  height: 100%; /* Ocupa todo el alto */
+  height: 100%;
+  min-height: 0; /* Clave para habilitar el scroll en Grid */
+  overflow: hidden;
 }
 
 .sidebar-header {
@@ -56,6 +59,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .sidebar-header h3 {
@@ -78,11 +82,12 @@ body {
   background: #f1f5f9;
 }
 
-/* SOLUCIÓN AL SCROLL: Esta clase debe tener overflow-y */
+/* Scroll garantizado en la lista */
 .tree-container {
-  flex: 1; /* Ocupa el espacio restante */
-  overflow-y: auto; /* Forzar el scroll vertical */
+  flex: 1 1 auto;
+  overflow-y: auto;
   padding: 0.75rem;
+  min-height: 0;
 }
 
 .empty-msg {
@@ -93,7 +98,6 @@ body {
   line-height: 1.4;
 }
 
-/* Estructura de carpetas y canciones en el árbol */
 .album-group {
   margin-bottom: 0.75rem;
 }
@@ -116,7 +120,7 @@ body {
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Para textos largos */
+  text-overflow: ellipsis;
   transition: background 0.15s;
 }
 
@@ -130,30 +134,32 @@ body {
   color: var(--text-main);
 }
 
-/* Panel Derecho: Reproductor (SOLUCIÓN FLEX) */
+/* Panel Derecho: Reproductor */
 .player-container {
-  padding: 2rem;
+  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Centrar verticalmente */
-  gap: 1.2rem; /* Espacio entre elementos */
+  justify-content: space-between;
   height: 100%;
+  overflow: hidden;
 }
 
 .cover-wrapper {
-  width: 180px;
-  height: 180px;
+  width: 170px;
+  height: 170px;
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 #track-cover {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Importante para que la carátula se adapte */
+  object-fit: cover;
+  display: block;
 }
 
 .track-info {
@@ -162,7 +168,7 @@ body {
 }
 
 .track-info h2 {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -171,11 +177,13 @@ body {
 
 .track-info p {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Sección de progreso y tiempos */
 .progress-section {
   width: 100%;
   display: flex;
@@ -191,7 +199,6 @@ input[type="range"] {
   cursor: pointer;
 }
 
-/* Controles de reproducción */
 .controls {
   display: flex;
   gap: 1rem;
@@ -228,9 +235,8 @@ input[type="range"] {
   background: var(--accent-hover);
 }
 
-/* Sección de volumen */
 .volume-section {
-  width: 80%;
+  width: 85%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
