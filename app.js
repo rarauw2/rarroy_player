@@ -197,7 +197,7 @@ async function loadFromGitHubAPI() {
     }
   } catch (error) {
     console.error(error);
-    treeContainer.innerHTML = '<p class="empty-msg">Error de conexión con GitHub.<br>Usa el botón "Cargar carpeta".</p>';
+    treeContainer.innerHTML = '<p class="empty-msg">Usa el botón "Cargar carpeta".</p>';
   }
 }
 
@@ -297,7 +297,7 @@ window.addEventListener('keydown', (e) => {
     
     case 'ArrowRight':
       e.preventDefault();
-      if(audio.duration) { // Al poner el if (audio.duration), le estamos diciendo al código: "Solo intenta calcular el salto hacia adelante si la canción ya está completamente cargada y sabes exactamente cuántos segundos dura".
+      if(audio.duration) { // 
         audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
       }
       break;
