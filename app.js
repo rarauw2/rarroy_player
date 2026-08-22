@@ -273,6 +273,7 @@ if (savedTheme === 'dark') {
   themeCheckbox.checked = true;
 }
 
+// Cambiar tema y guardar preferencia
 themeCheckbox.addEventListener('change', (e) => {
   if (e.target.checked) {
     document.body.classList.add('dark-mode');
@@ -280,6 +281,43 @@ themeCheckbox.addEventListener('change', (e) => {
   } else {
     document.body.classList.remove('dark-mode');
     localStorage.setItem('app-theme', 'light');
+  }
+});
+
+// Atajos de teclado globales
+
+window.addEventListener('keydown', (e) => {
+  if(['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
+
+  switch(e.code) {
+    case 'Space':
+      e.preventDefault(); // Evita el scroll al presionar espacio, ya que es su comportamiento por defecto en una página web
+      togglePlay();
+      break;
+    
+    case 'ArrowRight':
+      e.preventDefault();
+      if(audio.duration) { // Al poner el if (audio.duration), le estamos diciendo al código: "Solo intenta calcular el salto hacia adelante si la canción ya está completamente cargada y sabes exactamente cuántos segundos dura".
+        audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+      }
+      break;
+    
+    case 'ArrowLeft':
+      e.preventDefault();
+        audio.currentTime = Math.max(audio.currentTime - 5, 0);
+      break;
+
+    case 'ArrowUp':
+      e.preventDefault();
+      audio.volume = Math.min(audio.volume + 0.05, 1);
+      volumeBar.value = audio.volume;
+      break;
+    
+    case 'ArrowDown':
+      e.preventDefault();
+      audio.volume = Math.max(audio.volume - 0.05, 0);
+      volumeBar.value = audio.volume;
+      break;
   }
 });
 

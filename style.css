@@ -1,14 +1,15 @@
 :root {
-    --bg-color: #f1f5f9;
-    --panel-bg: #ffffff;
+    --bg-color: #e1f8c4;
+    --panel-bg: #eff2aa;
     --text-main: #0f172a;
     --text-muted: #64748b;
     --accent: #0f172a;
     --accent-hover: #334155;
-    --border: #e2e8f0;
+    --border: #dae893;
     --tree-hover: #f8fafc;
-    --active-track: #f1f5f9;
+    --active-track: #ebeced;
 }
+
 
 * {
     box-sizing: border-box;
@@ -30,25 +31,29 @@ body {
 
 /* Layout principal */
 .app-layout {
-    display: grid;
-    grid-template-columns: 320px 380px;
-    background: var(--panel-bg);
-    border-radius: 1.25rem;
-    border: 1px solid var(--border);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-    height: 600px;
-    max-height: 90vh;
-    width: 100%;
-    max-width: 740px;
-    overflow: hidden;
+  display: grid;
+  grid-template-columns: 320px 380px;
+  background: var(--panel-bg);
+  border-radius: 1.25rem;
+  border: 1px solid var(--border);
+  /* Sombra multicapa de elevación profunda */
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+              rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+              rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+              rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+              rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  height: 600px;
+  max-height: 90vh;
+  width: 100%;
+  max-width: 740px;
+  overflow: hidden;
 }
-
 /* Panel Izquierdo: Sidebar */
 .sidebar {
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    background-color: #fafbfc;
+    background-color: #eff2aa;
     height: 100%;
     min-height: 0;
     /* Clave para habilitar el scroll en Grid */
@@ -273,6 +278,15 @@ body.dark-mode .folder-btn:hover {
 
 body.dark-mode .controls .primary-btn {
     color: #0b0f17;
+}
+
+body.dark-mode .app-layout {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 54px 55px, 
+              rgba(0, 0, 0, 0.3) 0px -12px 30px, 
+              rgba(0, 0, 0, 0.3) 0px 4px 6px, 
+              rgba(0, 0, 0, 0.4) 0px 12px 13px, 
+              rgba(0, 0, 0, 0.2) 0px -3px 5px;
 }
 
 /* Transición suave al cambiar de tema */
